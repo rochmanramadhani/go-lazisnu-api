@@ -1,0 +1,52 @@
+app:
+  name: lazisnu-api
+  key: passphrasewhichneedstobe32bytes!
+  port: 8801
+  host: localhost:8801
+  version: 1.0.1
+  connection: go-lazisnu-db
+swagger:
+  swaggerhost: localhost:8801
+  swaggerscheme: http
+  swaggerprefix:
+jwt:
+  secret: secretkey
+connection:
+  primary: postgres
+  replica: postgres
+database:
+  - dbhost: localhost
+    dbuser: go-lazisnu-user
+    dbport: 5432
+    dbpass: go-lazisnu-password
+    dbname: go-lazisnu-db
+    dbprovider: postgresql
+    dbssl: disable
+    dbtz: Asia/Jakarta
+    dbautomigrate: false
+    dbseeder: false
+    dbsource: postgresql://go-lazisnu-user:go-lazisnu-password@localhost:5432/go-lazisnu-db?sslmode=disable
+driver:
+  cron:
+    enabled: true
+  firestore:
+    credentials: "./config/firebase-admin-sdk.json"
+    projectid: "lazisnu-rebuild-dev"
+  elasticsearch:
+    credentials: ""
+    url: ""
+  sentry:
+    dsn: ""
+assets:
+  image:
+    tempdir: "tmp/img"
+    extension: "png,jpeg,jpg"
+    quality: "1024,512,256"
+  file:
+    tempdir: "tmp/file"
+    extension: "pdf"
+queue:
+  image:
+    maxline: 10
+  file:
+    maxline: 10

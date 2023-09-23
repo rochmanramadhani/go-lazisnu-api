@@ -1,0 +1,29 @@
+# Build stage
+FROM golang:1.19.13-alpine3.18 AS build
+WORKDIR /go/src/app
+COPY . .
+
+# Install Go tools
+RUN go install github.com/githubnemo/CompileDaemon@latest && \
+    go install github.com/go-delve/delve/cmd/dlv@latest
+
+# Download dependencies
+RUN go mod download
+
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /go/bin/api ./main.go
+
+# Final stage
+FROM alpine:latest
+RUN apk update && apk add --no-cache tzdata
+ENV TZ Asia/Jakarta
+WORKDIR /usr/app
+
+# Copy the built binary and assets
+COPY --from=build /go/bin/api /go/bin/api
+COPY --from=build /go/src/app/ ./
+
+EXPOSE 8801 40000
+
+# Use CompileDaemon to automatically rebuild and run with Go-Delve for debugging
+CMD ["CompileDaemon", "--build=go build main.go", "--command=dlv debug --headless --listen=:40000 --api-version=2 --accept-multiclient main.go"]

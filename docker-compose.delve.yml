@@ -1,0 +1,78 @@
+version: "3.8"
+services:
+  #  still not working
+  #  web:
+  #    container_name: api
+  #    build:
+  #      context: ./
+  #      dockerfile: deployments/docker/Dockerfile.DelveHotReload
+  #    ports:
+  #      - "8801:8801"
+  #      - "5555:5555"
+  #      - "8080:8080"
+  #      - "40000:40000"
+  #    environment:
+  #      - PORT=8801
+  #    security_opt:
+  #      - "seccomp:unconfined"
+  #    cap_add:
+  #      - SYS_PTRACE
+  #    depends_on:
+  #      - postgres
+  #      - redis
+  #    restart: always
+  #    volumes:
+  #      - ./:/app
+  #    networks:
+  #      - network_lazisnu
+
+  redis:
+    container_name: redis_lazisnu
+    image: redis:7.2.1-alpine
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - network_lazisnu
+
+  postgres:
+    container_name: postgres_lazisnu
+    image: postgres:15.4-alpine3.18
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: go-lazisnu-user
+      POSTGRES_PASSWORD: go-lazisnu-password
+      POSTGRES_DB: go-lazisnu-db
+      DB_SOURCE: postgresql://go-lazisnu-user:go-lazisnu-password@localhost:5432/go-lazisnu-db?sslmode=disable
+    volumes:
+      - volume_lazisnu:/var/lib/postgresql
+    networks:
+      - network_lazisnu
+
+  jaeger:
+    container_name: jaeger_lazisnu
+    restart: always
+    image: jaegertracing/all-in-one:latest
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+      - "14250:14250"
+      - "9411:9411"
+    networks:
+      - network_lazisnu
+
+volumes:
+  volume_lazisnu:
+    driver: local
+
+networks:
+  network_lazisnu:
+    driver: bridge
