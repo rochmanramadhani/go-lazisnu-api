@@ -21,6 +21,8 @@ type Factory struct {
 
 	Faq         dbRepository.Faq
 	FaqCategory dbRepository.FaqCategory
+
+	DonationType dbRepository.DonationType
 }
 
 func Init(cfg *config.Configuration, db *gorm.DB, fs *firestore.Client) Factory {
@@ -34,6 +36,8 @@ func Init(cfg *config.Configuration, db *gorm.DB, fs *firestore.Client) Factory 
 
 	f.Faq = dbRepository.NewFaq(f.Db)
 	f.FaqCategory = dbRepository.NewFaqCategory(f.Db)
+
+	f.DonationType = dbRepository.NewDonationType(f.Db)
 
 	// firestore
 	f.Fs = fs

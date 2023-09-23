@@ -16,4 +16,6 @@ func Init(e *echo.Echo, f factory.Factory) {
 
 	handler.NewFaq(f).Route(e.Group(prefix + "/faqs"))
 	handler.NewFaqCategory(f).Route(e.Group(prefix + "/faq-categories"))
+
+	handler.NewDonationType(f).Route(e.Group(prefix + "/donation-types"))
 }

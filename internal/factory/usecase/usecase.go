@@ -13,6 +13,8 @@ type Factory struct {
 
 	Faq         usecase.Faq
 	FaqCategory usecase.FaqCategory
+
+	DonationType usecase.DonationType
 }
 
 func Init(cfg *config.Configuration, r repository.Factory) Factory {
@@ -24,6 +26,8 @@ func Init(cfg *config.Configuration, r repository.Factory) Factory {
 
 	f.Faq = usecase.NewFaq(cfg, r)
 	f.FaqCategory = usecase.NewFaqCategory(cfg, r)
+
+	f.DonationType = usecase.NewDonationType(cfg, r)
 
 	return f
 }
